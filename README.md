@@ -1,17 +1,17 @@
 # Laravel Telegram logger
 
-Send logs to Telegram chat via Telegram bot
+Kirim log ke obrolan Telegram melalui bot Telegram
 
 ## Install
 
 ```
 
-composer require grkamil/laravel-telegram-logging
+komposer memerlukan grkamil/laravel-telegram-logging
 
 ```
 
-Define Telegram Bot Token and chat id (users telegram id) and set as environment parameters.
-Add to <b>.env</b> 
+Tentukan Token Bot Telegram dan id obrolan (id telegram pengguna) dan tetapkan sebagai parameter lingkungan.
+Tambahkan ke <b>.env</b>
 
 ```
 TELEGRAM_LOGGER_BOT_TOKEN=id:token
@@ -19,120 +19,120 @@ TELEGRAM_LOGGER_CHAT_ID=chat_id
 ```
 
 
-Add to <b>config/logging.php</b> file new channel:
+Tambahkan ke file <b>config/logging.php</b> saluran baru:
 
 ```php
 'telegram' => [
-    'driver' => 'custom',
-    'via'    => Logger\TelegramLogger::class,
-    'level'  => 'debug',
+     'driver' => 'khusus',
+     'melalui' => Pencatat\TelegramLogger::kelas,
+     'tingkat' => 'debug',
 ]
 ```
 
-If your default log channel is a stack, you can add it to the <b>stack</b> channel like this
+Jika saluran log default Anda adalah tumpukan, Anda dapat menambahkannya ke saluran <b>tumpukan</b> seperti ini
 ```php
-'stack' => [
-    'driver' => 'stack',
-    'channels' => ['single', 'telegram'],
+'tumpukan' => [
+     'driver' => 'tumpukan',
+     'saluran' => ['tunggal', 'telegram'],
 ]
 ```
 
-Or you can simply change the default log channel in the .env 
+Atau Anda cukup mengubah saluran log default di .env
 ```
 LOG_CHANNEL=telegram
 ```
 
-Publish config file and views
+Publikasikan file konfigurasi dan tampilan
 ```
-php artisan vendor:publish --provider "Logger\TelegramLoggerServiceProvider"
+vendor artisan php: publikasikan --provider "Logger\TelegramLoggerServiceProvider"
 ```
 
-## Telegram Logging Formats
+## Format Pencatatan Telegram
 
-You can choose among two different formats that you can specify in the `.env` file like this :
+Anda dapat memilih di antara dua format berbeda yang dapat Anda tentukan dalam file `.env` seperti ini :
 
 ```
-# Use a minimal log template
+# Gunakan templat log minimal
 TELEGRAM_LOGGER_TEMPLATE = laravel-telegram-logging::minimal
 
-# Or use the backward compatible one (default setting used even without inserting this row)
+# Atau gunakan yang kompatibel mundur (pengaturan default digunakan bahkan tanpa memasukkan baris ini)
 TELEGRAM_LOGGER_TEMPLATE = laravel-telegram-logging::standard
 ```
 
-It is possible to create other blade templates and reference them in the `TELEGRAM_LOGGER_TEMPLATE` entry 
+Dimungkinkan untuk membuat templat blade lain dan mereferensikannya di entri `TELEGRAM_LOGGER_TEMPLATE`
 
-## Create bot
+## Buat bot
 
-For using this package you need to create Telegram bot
+Untuk menggunakan paket ini, Anda perlu membuat bot Telegram
 
-1. Go to @BotFather in the Telegram
-2. Send ``/newbot``
-3. Set up name and bot-name for your bot.
-4. Get token and add it to your .env file (it is written above)
-5. Go to your bot and send ``/start`` message
+1. Kunjungi @BotFather di Telegram
+2. Kirim ``/newbot``
+3. Siapkan nama dan nama bot untuk bot Anda.
+4. Dapatkan token dan tambahkan ke file .env Anda (tertulis di atas)
+5. Buka bot Anda dan kirim pesan ``/mulai``
 
-## Change log template at runtime
+## Ubah template log saat runtime
 
-1. Change config for template.
+1. Ubah konfigurasi untuk template.
 ```php
 config(['telegram-logger.template'=>'laravel-telegram-logging::custom'])
 ```
-2. Use `Log` as usual.
+2. Gunakan `Log` seperti biasa.
 
-## Configuring a different chat id or token per channel
+## Mengonfigurasi id atau token obrolan yang berbeda per saluran
 
-1. Add `chat_id` or `token` to channels in `config/logging.php`.  Overrides `config('telegram.chat_id')`.
+1. Tambahkan `chat_id` atau `token` ke saluran di `config/logging.php`. Menimpa `config('telegram.chat_id')`.
 ```php
 [
-    'channels' => [
-        [
-            'company' => [
-                'driver' => 'custom',
-                'via' => TelegramLogger::class,
-                'chat_id' => env('TELEGRAM_COMPANY_CHAT_ID'),
-                'token' => env('TELEGRAM_COMPANY_BOT_TOKEN'),
-                'level' => 'debug'
-            ],
+     'saluran' => [
+         [
+             'perusahaan' => [
+                 'driver' => 'khusus',
+                 'melalui' => TelegramLogger::kelas,
+                 'chat_id' => env('TELEGRAM_COMPANY_CHAT_ID'),
+                 'token' => env('TELEGRAM_COMPANY_BOT_TOKEN'),
+                 'tingkat' => 'debug'
+             ],
 
-            'operations' => [
-                'driver' => 'custom',
-                'via' => TelegramLogger::class,
-                'chat_id' => env('TELEGRAM_OPERATIONS_CHAT_ID'),
-                'token' => env('TELEGRAM_OPERATIONS_BOT_TOKEN'),
-                'level' => 'debug'
-            ]
-        ]
-    ]
+             'operasi' => [
+                 'driver' => 'khusus',
+                 'melalui' => TelegramLogger::kelas,
+                 'chat_id' => env('TELEGRAM_OPERATIONS_CHAT_ID'),
+                 'token' => env('TELEGRAM_OPERATIONS_BOT_TOKEN'),
+                 'tingkat' => 'debug'
+             ]
+         ]
+     ]
 ]
 ```
 
-2. Use `Log` as usual.
-## Lumen support
+2. Gunakan `Log` seperti biasa.
+## Dukungan Lumen
 
-To make it work with Lumen, you need also run two steps:
+Agar berfungsi dengan Lumen, Anda juga perlu menjalankan dua langkah:
 
-1. Place config/telegram-logger.php file with following code:
+1. Tempatkan file config/telegram-logger.php dengan kode berikut:
 ```php
 <?php
 
-return [
-    // Telegram logger bot token
-    'token' => env('TELEGRAM_LOGGER_BOT_TOKEN'),
+kembali [
+     // Token bot pencatat telegram
+     'token' => env('TELEGRAM_LOGGER_BOT_TOKEN'),
 
-    // Telegram chat id
-    'chat_id' => env('TELEGRAM_LOGGER_CHAT_ID'),
+     // Id obrolan telegram
+     'chat_id' => env('TELEGRAM_LOGGER_CHAT_ID'),
     
-    // you can define your custom template for message
-    // e.g: logging.template
-    // 'template' => 'some your view path'
+     // Anda dapat menentukan template khusus untuk pesan
+     // misalnya: logging.template
+     // 'templat' => 'beberapa jalur tampilan Anda'
 ];
 ```
 
-2. Uncomment ```$app->withFacades();``` and configure the file ```$app->configure('telegram-logger');``` at bootstrap/app.php
-3. Place default Laravel/Lumen logging file to config/logging.php (to add new channel).
+2. Batalkan komentar ```$app->withFacades();``` dan konfigurasikan file ```$app->configure('telegram-logger');``` di bootstrap/app.php
+3. Tempatkan file logging Laravel/Lumen default ke config/logging.php (untuk menambahkan saluran baru).
 
-## Proxy support
-To use a proxy server, set the variable in the .env
+## Dukungan proxy
+Untuk menggunakan server proxy, setel variabel di .env
 ```
 TELEGRAM_LOGGER_PROXY=proxy_server.com:port
 ```
